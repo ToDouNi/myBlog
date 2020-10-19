@@ -1,0 +1,287 @@
+{extend name="public/body"}
+{block name="body"}
+	<style type="text/css">
+		body{
+			background: url('/static/images/chatroom-back.jpg') no-repeat;
+			background-size: 100% 100vh;
+			min-height: 100vh;
+		}
+		.chatroom{
+			width: 100%;
+		}
+		.chatroom-box{
+			background:#F5F5F5;
+			margin: 20px 19% 0 19%;
+			border-radius: 5px;
+			overflow: hidden;
+			height: 600px;
+		}
+		.chat-header{
+			background-color:#42494B; 
+			color: #fff;
+			padding:0px 12px;
+			height: 45px;
+			line-height: 45px;
+			font-size: 13px;
+		}
+		.chat-header span{
+			vertical-align: middle;
+			margin-left: 10px;
+		}
+		.chat-content{
+			height: 555px;
+		}
+		.iconuser-filling{
+			font-size: 18px !important;
+			vertical-align: middle;
+		}
+		.chat-left{
+			height: 100%;
+			background-color: #fff;
+			padding: 0 !important;
+			border-right: 1px solid #DCDCDC;
+		}
+		.left-item{
+			border-bottom: 1px solid #f1f1f1;
+			padding:15px;
+			display: flex;
+			align-items: top;
+		}
+		.l-avatar img{
+			width: 40px;
+			border-radius: 2px;
+			height: 40px;
+		}
+		.l-r{
+			padding-left: 15px;
+		}
+		.l-r .name{
+			font-size: 13px;
+			margin-bottom: 2px;
+		}
+		.l-r .content{
+			font-size: 12px;
+			color: #969696;
+		}
+		.chat-right{
+			padding: 0px !important;
+		}
+		.right-title{
+			background: #fff;
+			padding: 9px;
+			font-size: 13px;
+			color: #233445;
+		}
+		.right-title .icon{
+			width: 18px;
+			height: 18px;
+			vertical-align: middle;
+			margin-right: 5px;
+		}
+		.right-msg{
+			padding: 0 20px 20px 20px;
+			overflow-y: auto;
+			height: 360px;
+			border-bottom: 1px solid #DCDCDC;
+		}
+		.ipt-textarea textarea{
+			width: 100%;
+			height: 100%;
+			resize: none;
+			background: none;
+			border: 0;
+			height: 123px;
+			padding: 10px;
+			outline:none;
+		}
+		.ipt-top{
+			padding: 5px 0 0 10px;
+		}
+		.ipt-top .iconfont{
+			color: #999;
+			font-size: 20px;
+		}
+		.ipt-top .iconfont:hover{
+			color: #FF6E00;
+		}
+		.msg-time{
+			text-align: center;
+			font-size: 12px;
+			color: #999;
+			margin: 20px 0 10px 0;	
+		}
+		.msg-data{
+			display: flex;
+			align-items: flex-start;
+			
+		}
+		.msg-avatar img{
+			border-radius: 2px;
+			width: 35px;
+			height: 35px;
+		}
+		.msg-content{
+			margin: 0 15px;
+			background: #9EEA6A;
+			padding: 5px 8px;
+			border-radius: 3px;
+			max-width:38%;
+			height: auto;
+			font-size: 13px;
+			position: relative;
+		}
+		.msg-content-sjx{
+			position:absolute;
+		    width: 0;
+		    height: 0;
+		    left: -4px;
+		    top: 10px;
+		    border-top: 4px solid transparent;
+		    border-right: 4px solid #9EEA6A;
+		    border-bottom: 4px solid transparent;
+		}
+	</style>
+	<div class="chatroom">
+		<div class="chatroom-box">
+			<div class="chat-header"><i class="iconfont iconuser-filling"></i><span>当前在线 9 人</span></div>
+			<div class="chat-content">
+				<div class="chat-left col-md-3">
+					<div class="left-item">
+						<div class="l-avatar">
+							<img src="https://wx.qlogo.cn/mmhead/Q3auHgzwzM5DKJMkqERJTEsX9icPlLqic3yw8iauHvWkvYU2F5hhO5LbQ/132">
+						</div>
+						<div class="l-r">
+							<div class="name">豆泥聊天室</div>
+							<div class="content"><span>今天天气好好呀.....</span> 11:47.31</div>
+						</div>
+					</div>
+				</div>
+				<div class="chat-right col-md-9">
+					<div class="right-title">
+						<svg class="icon iconfont"  aria-hidden="true">
+							<use xlink:href="#iconxueshengxinxi-caise" />
+						</svg>
+						<span>豆泥聊天室 (5)</span>
+					</div>
+					<div class="right-box">
+						<div class="right-msg">
+							{volist name="chatRoomList" id="item"}
+							<div class="msg-item">
+								<div class="msg-time">{$item.create_time}</div>
+								<div {eq name="$Think.session.user_id" value="$item.owner"}
+					                    style="flex-direction: row-reverse;" 
+					          		{/eq}  
+					          	class="msg-data">
+									<div class="msg-avatar">
+										<img src="{$item.avatar}">
+									</div>
+									<div class="msg-content">
+										<div 
+										class="msg-content-sjx"
+										{eq name="$Think.session.user_id" value="$item.owner"}
+						                    style="left:auto;right: -4px;top:10px;border-left: 4px solid #9EEA6A;border-right:none;" 
+						          		{/eq}  
+						          		></div>
+										{$item.content}
+									</div>
+								</div>
+							</div>
+							{/volist}
+						</div>
+						<div class="right-ipt">
+							<div class="ipt-top"><i class="iconfont iconsmile"></i></div>
+							<div class="ipt-textarea">
+								<textarea id="crInput"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+<script type="text/javascript">
+		$('#crInput').keyup(function(event){
+			if(event.keyCode ==13){
+				if('{$Think.session.user_id}'){
+					if($('#crInput').val()){
+			    	$.ajax({
+			    		type:'post',
+			    		url:"{:url('index/index/insertChat')}",
+			    		data: {
+			    			"content":$('#crInput').val()
+			    		},
+			    		dataType:'json',
+			    		success:function(data){
+			    			if(data.code == 1){
+			    				var htm = "";
+			    				htm += "<div class='cr-item-time'>";
+			    				htm += data.data.create_time;
+			    				htm += "</div>";
+			    				htm += "<div data-id='"+data.data.id+"' style='padding-left: 31px;' class='cr-list-item'>";
+			    				htm += "<div style='margin-left:auto;' class='cr-item-msg'>";
+			    				htm += data.data.content;
+			    				htm += "</div>";
+			    				htm += "<div class='cr-item-avatar'>";
+			    				htm += "<img style='margin-right: 5px;' class='avatar' src='/uploads/avatar/default-avatar.png'>";
+			    				htm += "</div></div>";
+			    				$('#crList').append(htm);
+			    				$('#crInput').val('');
+			    				$("#crList").scrollTop($("#crList")[0].scrollHeight);
+			    			}
+			    		}
+			    	})
+				    }else{
+				    	alert('客官,不能发送空的消息哦！');
+						return;
+				    }
+				}else{
+					alert('客官,请先登录哦！');
+				}
+			    
+			}
+		})
+		$("#crList").scrollTop($("#crList")[0].scrollHeight);
+		setInterval(function(){
+			if($(".cr-list-item")){
+				// console.log($(".cr-list-item:last"));
+				$.ajax({
+					type:"get",
+					url:"{:url('index/index/searchChat')}",
+					data:{
+						'id':$(".cr-list-item:last")[0].getAttribute("data-id")
+					},
+					dataType:'json',
+					success:function(data){
+						// console.log(data);
+						if(data.code == 1){
+							if(data.data.length > 0){
+								for(let i=0;i<data.data.length;i++){
+									var htm = "";
+				    				htm += "<div class='cr-item-time'>";
+				    				htm += data.data[i].create_time;
+				    				htm += "</div>";
+				    				htm += "<div data-id='"+data.data[i].id+"' style='padding-left: 31px;' class='cr-list-item'>";
+				    				htm += "<div style='margin-left:auto;' class='cr-item-msg'>";
+				    				htm += data.data[i].content;
+				    				htm += "</div>";
+				    				htm += "<div class='cr-item-avatar'>";
+				    				htm += "<img style='margin-right: 5px;' class='avatar' src='/uploads/avatar/default-avatar.png'>";
+				    				htm += "</div></div>";
+				    				$('#crList').append(htm);
+				    				$("#crList").scrollTop($("#crList")[0].scrollHeight);
+								}
+							}
+						}else{
+							console.log(data.msg)
+						}
+					}
+				})
+			}
+		},1000)
+		
+	</script>
+{/block}
+
+

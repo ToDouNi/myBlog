@@ -1,0 +1,138 @@
+{extend name="public/body"}
+{block name="body"}
+	{load href="/static/js/live2d/font-awesome.min.css"}
+	<style type="text/css">
+		.navbarBg{
+		    background: var(--background-color) !important;
+		}
+		div::-webkit-scrollbar{
+		  width:3px;
+		}
+		div::-webkit-scrollbar-track{
+		  background: #fff;
+		  border-radius:2px;
+		}
+		div::-webkit-scrollbar-thumb{
+		  background: #bfbfbf;
+		  border-radius:10px;
+		}
+		div::-webkit-scrollbar-thumb:hover{
+		  background: blue;
+		}
+		div::-webkit-scrollbar-corner{
+		  background: #179a16;
+		}
+		body{
+			/*background: url('/static/images/bg.png') repeat;*/
+		}
+		.article_item{
+			position: relative;
+		    padding: 10px 0;
+		    border-bottom: 1px solid #e8e8e8;
+		    clear: both;
+		    overflow: hidden;
+		}
+		.link {
+		    color: #222;
+		}
+		.item-img{
+			/*width: 189px;*/
+			object-fit: cover;
+			width: 23.5%;
+			height: 110px;
+			margin-right: 6px;
+		}
+		.onlybox{
+			display: flex;
+			flex-direction: row;
+			word-break: break-all;
+		}
+		.article-title{
+			width: 100%;
+			white-space:nowrap;
+			overflow:hidden;
+			text-overflow:ellipsis;
+			display: block;
+		    font-size: 20px;
+		    line-height: 1.3;
+		    margin-bottom: 4px;
+		    font-weight: 700;
+		}
+		.article-title a{
+		    color: #000042;
+		}
+		.article-footer{
+			margin-top: 10px;
+		}
+		.article-footer .tag{
+			color:#fff;
+			font-size: 11px;
+			padding: 3px 6px;
+			border-radius: 5px;
+			background: var(--background-color);
+			margin-right: 10px;
+			/*border:1px solid #398DEE;*/
+		}
+		.article-avatar{
+			border-radius: 50%;
+			height: 20px;
+			width: 20px;
+			margin-right: 5px;
+		}
+		.author{
+			margin-right: 10px;
+		}
+		.time{
+			font-size: 13px;
+		}
+		.empty{
+			font-size: 20px;
+			font-weight: 700;
+			padding-top: 30px;
+		}
+	</style>
+	<div class="col-ms-1 col-xs-1 col-sm-1"></div>
+	<div style="min-width:1100px;" class="col-ms-10 col-xs-10 col-sm-10">
+		<div style="min-width:700px;background: #fff;" class="col-ms-8 col-xs-8 col-sm-8">
+			{volist name="articleList" id="item" empty="<div class='empty'>文章列表为空</div>"}
+				<div class="article_item">
+						{if $item.image}
+							{if sizeof($item.image)>1}
+								<div style="margin-bottom: 10px;" class="article-title">
+									<a href="{:url('index/index/detail',['url'=>$item.url])}">{$item.title}</a>
+								</div>
+								{volist name="item.image" id="imgItem"}
+									<img class="item-img" src="{$imgItem}">
+								{/volist}
+								<div class="article-footer">
+									<span class="tag">{$item.tag}</span>
+									<span class="author"><img class="article-avatar" src="/uploads/avatar/default-avatar.png">{$item.author}</span>
+									<span class="time">{$item.time}</span>
+								</div>
+							{else/}
+							<div class="onlybox">
+								<img class="item-img" src="{$item.image[0]}">
+								<div style="padding: 20px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+									<div class="article-title"><a href="{:url('index/index/detail',['url'=>$item.url])}">{$item.title}</a></div>
+									<div class="article-footer">
+										<span class="tag">{$item.tag}</span>
+										<span class="author"><img class="article-avatar" src="/uploads/avatar/default-avatar.png">{$item.author}</span>
+										<span class="time">{$item.time}</span>
+									</div>
+								</div>
+							</div>
+							{/if}
+						{/if}
+				</div>
+			{/volist}
+		</div>
+		<div style="padding: 0 40px;" class="col-ms-4 col-xs-4 col-sm-4">
+			
+		</div>
+	</div>
+	<div class="col-ms-1 col-xs-1 col-sm-1"></div>
+	
+	{load href="/static/js/live2d/autoload.js"}
+{/block}
+
+

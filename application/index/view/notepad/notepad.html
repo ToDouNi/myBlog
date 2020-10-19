@@ -1,0 +1,214 @@
+{extend name="public/body"}
+{block name="body"}
+	{load href="/static/js/nicEdit.js" /}
+	<style type="text/css">
+		body{
+			background: url('/static/images/chatroom-back.jpg') no-repeat;
+			background-size: 100% 100vh;
+			min-height: 100vh;
+		}
+		.clearPadding{
+			padding: 0 !important;
+			overflow-x: hidden;
+		}
+		.list{
+	/*		border-right: 1px solid #E0E1E5;*/
+			overflow-y:auto;
+		}
+		.active{
+			background: #EAF0FB !important;
+		}
+		.list-item{
+			padding: 10px;
+			border-bottom: 1px solid #E0E1E5;
+		}
+		.list-item:hover{
+			background: #F6F7F9;
+		}
+		.title{
+			font-size: 13px;
+			margin-bottom: 5px;
+		}
+		.content{
+			line-height: 20px;
+			margin-bottom: 5px;
+			font-size: 12px;
+			color: #82828C;
+			text-overflow: -o-ellipsis-lastline;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+		    line-clamp: 2;
+			-webkit-box-orient: vertical;
+		}
+		.bottom{
+			font-size: 11px;
+			color: #c2c2c2;
+		}
+		.l-tab{
+			border-right: 1px solid #ccc;
+			text-align: center;
+			padding: 20px 0;
+			height: 100%;
+		}
+		.l-tab span{
+			color: #788190;
+			padding: 8px;
+			border-radius: 50%;
+			box-shadow: 0 2px 2px 0 rgba(116, 133, 161, 0.13);
+    		border: solid 1px rgba(173, 184, 196, 0.28);
+    		cursor:pointer;
+		}
+		
+		.setHeight{
+			height: 92vh;
+			overflow-y: auto;
+		}
+		.nicEdit-main{
+			padding: 10px;
+		}
+		.data-null{
+			text-align: center;
+			color: #233445;
+		}
+		.data-null img{
+			margin-bottom: 15px;
+			width: 100px;
+			height: auto;
+			margin-top: 200px;
+		}
+	</style> 
+	<div style="background-color: #fff;" class="clearPadding setHeight col-md-3 col-xs-3 col-sm-3">
+		<div class="l-tab col-md-2 col-xs-2 col-sm-2">
+			<span onClick="newNotePad()" title="新增笔记" class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+		</div>
+		<div class="clearPadding setHeight col-md-10 col-xs-10 col-sm-10">
+			<div class="list">
+					{volist name="notepadList" id="item" empty="
+						<div class='data-null'>
+						<img src='/static/images/null.png'>
+						<div>啥都没有呀，客官写一篇吧！</div>
+						</div>
+					"}
+					<div onClick="detail({$item.id})" class="list-item">
+						<div class="title">{$item.title}</div>
+						<div class="content">{$item.content|unHtml}</div>
+						<div class="bottom">{$item.update_time}</div>
+					</div>
+					{/volist}
+				
+			</div>
+		</div>
+	</div>
+	<div style="background-color: #fff;" class="clearPadding setHeight col-md-9 col-xs-9 col-sm-9">
+		<div id="menu"></div>
+			<div style="border-left:1px solid #ccc;" class="clearPadding col-md-9 col-xs-9 col-sm-9">
+				<input type="text" name="title" value="" style="border:none;border-radius: 0;box-shadow:0;" class="form-control" id="title" placeholder="请输入标题...">
+			</div>
+			<div style="padding: 2px 10px 0 0;text-align: right;" class="col-md-3 col-xs-3 col-sm-3">
+				<button type="button" onClick="save()" class="btn btn-primary btn-sm">保存 (ctrl+s)</button>
+				<button type="button" onClick="del()" class="btn btn-danger btn-sm">删除</button>
+			</div>
+			<input type="hidden" value="" name="id">
+			<textarea style="min-height: 80vh" name="content" id="content" class="form-control"></textarea>
+	</div>
+
+	<script type="text/javascript">
+		bkLib.onDomLoaded(function() {
+			new nicEditor({iconsPath : '/static/js/nicEditorIcons.gif'}).panelInstance('content');
+		});
+		$(function(){ 
+			setTimeout(function(){
+				console.log(document.body.clientHeight );
+				$('.nicEdit-main').parent().height($(document).height()-118);
+			},200)
+
+
+		　　$('.list-item').click(function(){
+				$('.list-item').removeClass('active');
+				$(this).addClass('active');
+			})
+			$('.list-item').eq(0).trigger('click');
+		}); 
+		window.addEventListener("keydown", function(e) {
+        //可以判断是不是mac，如果是mac,ctrl变为花键
+        //event.preventDefault() 方法阻止元素发生默认的行为。
+        if((e.key=='s'||e.key=='S')&&(navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)){
+            	e.preventDefault();
+            	save();
+	        }
+	    }, false);
+
+
+		function save(){
+			var data = {
+            		"id":$("input:hidden[name='id']").val(),
+            		"title":$('#title')[0].value,
+            		"content":$(".nicEdit-main").html()
+            }
+			$.ajax({
+				type:"post",
+				url:"{:url('index/notepad/save')}",
+				data:data,
+				dataType:'json',
+				success:function(data){
+					console.log(data);
+					if(data.code == 1){
+						window.location.reload()
+					}else if(data.code == 0){
+						alert(data.msg);
+					}else{
+						alert(data.msg);
+						window.location.href="{:url('index/user/login')}"
+					}
+				}
+			})
+		}
+
+	    function detail(item){
+	    	tab = item;
+	    	$.ajax({
+	    		type:'post',
+	    		url:"{:url('index/notepad/detail')}",
+	    		data:{
+	    			"id":item
+	    		},
+	    		dataType:"json",
+	    		success:function(data){
+	    			if(data.code == 1){
+		    			$('#title').val(data.data.title);	
+		    			$(".nicEdit-main").html(data.data.content);	
+		    			$("input:hidden[name='id']").val(data.data.id);
+	    			}
+	    		}
+	    	})
+	    }
+
+	    function newNotePad(){
+	    	$('.list-item').removeClass('active');
+	    	$('#title').val('');	
+		    $(".nicEdit-main").html('');	
+		    $("input:hidden[name='id']").val('');
+	    }
+
+	    function del(){
+            if(window.confirm('你确定要删除这篇笔记吗？')){
+                 $.ajax({
+					type:'post',
+					url:"{:url('index/notepad/delete')}",
+					data:{
+						"id":$("input:hidden[name='id']").val()
+					},
+					dataType:"json",
+					success:function(data){
+						if(data.code == 1){
+							window.location.reload();
+						}
+					}
+				})  
+            }
+	    }
+
+	</script>
+{/block}

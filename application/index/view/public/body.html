@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Mr.hong的个人博客</title>
+	{load href="/static/js/jquery.min.js" /}	
+	{load href="/static/js/bootstrap.min.js" /}	
+	{load href="/static/css/bootstrap.css" /}	
+	{load href="/static/ali-icon/iconfont.css" /}
+	{load href="/static/ali-icon/iconfont.js" /}
+	{load href="/static/css/base.css" /}
+</head>
+	<style type="text/css">
+		div::-webkit-scrollbar{
+		  width:3px;
+		  height:10px;
+		}
+		div::-webkit-scrollbar-track{
+		  background: #fff;
+		  border-radius:2px;
+		}
+		div::-webkit-scrollbar-thumb{
+		  background: #bfbfbf;
+		  border-radius:10px;
+		}
+		div::-webkit-scrollbar-thumb:hover{
+		  background: blue;
+		}
+		div::-webkit-scrollbar-corner{
+		  background: #179a16;
+		}
+	</style>
+<body">
+	{include file="public/nav"/}
+	{block name="body"}左边主体{/block}
+</body>
+</html>	

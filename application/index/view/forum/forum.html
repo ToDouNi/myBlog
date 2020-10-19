@@ -1,0 +1,440 @@
+{extend name="public/body"}
+{block name="body"}
+<style type="text/css">
+	body{
+		background: url('/static/images/forum_bg.jpg') no-repeat;
+		background-color: #b4daf0;
+	}
+	.box{
+		background: rgba(255,255,255,0.8);
+		border: 1px solid rgba(255,255,255,0.3);
+		border-radius: 3px;
+		margin-bottom: 15px;
+	}
+	.container{
+		padding: 15px 60px 0 60px;
+	}
+	.clearpad{
+		padding: 0px !important;
+	}
+	.forum-list{
+	}
+	.list-item{
+		display: flex;
+		padding: 15px 0 0 15px;
+	}
+	.list-item .avatar-box img{
+		border-radius: 50%;
+		width: 50px;
+		height: 50px;
+		margin-right: 5px;
+	}
+	.list-item .right{
+		padding: 5px;
+		flex: 1;
+	}
+	.list-item .right .title{
+		font-size: 15px;
+		font-weight: 700;
+		margin-bottom: 5px;
+	}
+	.list-item .right .content{
+		font-size: 14px;
+		margin-bottom: 10px;
+	}
+	.list-item .right .video{
+	}
+	.list-item .right .time{
+		font-size: 12px;
+		color: #808080;
+		margin-top: 5px;
+	}
+	.list-item .right .item-bottom{
+		border-top: 1px solid rgba(255,255,255,0.3);
+		width: 100%;
+		margin-top: 15px;
+	}
+	.list-item .right .item-bottom div{
+		border-right: 1px solid rgba(255,255,255,0.3);
+		width: 23%;
+		display: inline-block;
+		text-align: center;
+		margin: 3px 0;
+		font-size: 13px;
+		padding: 3px 0;
+	}
+	.list-item .right .imgs{
+		width: 340px;
+	}
+	.list-item .right .imgs img{
+		width: 110px;
+		margin-bottom: 5px;
+		height: 110px;
+		object-fit: cover;
+		cursor:zoom-in;
+	}
+	.list-item .right .img img{
+		width: auto;
+		max-width: 250px;
+		height: auto;
+		max-height: 350px;
+		margin-bottom: 5px;
+		cursor: pointer;
+	}
+	.hot .title{
+		font-weight: 700;
+		padding: 10px 15px;
+		border-bottom: 1px solid rgba(255,255,255,0.3);
+	}
+	.hot .list{
+		padding: 15px;
+	}
+	.hot .list .item{
+		display: flex;
+	}
+	.hot .list .item .top{
+		color: #FF6600;
+		min-width: 20px;
+	}
+	.hot .list .item .content{
+		flex: 1;
+	}
+	.hot .list .item .count{
+		color: #808080;
+	}
+	.hot .icon-i .iconfont{
+		font-size: 25px;
+	}
+	.posting{
+		padding: 15px;
+	}
+	.posting .title img{
+		width: 200px;
+	}
+	.posting .p-input{
+		margin: 10px 0;
+	}
+	.posting .p-input textarea{
+		height: 80px;
+	    margin: 0px;
+	    border-width: 0px;
+	    font-size: 14px;
+	    line-height: 18px;
+	    resize: none;
+	    width: 100%;
+	    background: rgba(255,255,255,0.8);
+	    padding: 10px;
+	    border-radius:3px
+	}
+	.posting .p-input textarea:focus{
+		border:1px solid var(--background-color);
+	}
+	.posting .bottom div{
+		display: inline-block;
+		cursor: pointer;
+		position: relative;
+	}
+	.posting .bottom div .bqb{
+		display: none;
+		position: absolute;
+		left: 15px;
+		top: 20px;
+		width: 340px;
+		height: 200px;
+		z-index: 999;
+		padding: 10px;
+		overflow-y: auto;
+	}
+	.posting .bottom div .bqb img{
+		width: 25px;
+		margin: 0px 8px 8px 8px;
+		-webkit-user-select: none;
+        -moz-user-select: none;
+        -o-user-select: none;
+        user-select: none;
+	}
+	.posting .bottom div .bqb img:hover{
+		width: 28px;
+		margin: 0px 8px 5px 5px;
+	}
+	.posting .bottom div span{
+		font-size: 12px;
+		-webkit-user-select: none;
+        -moz-user-select: none;
+        -o-user-select: none;
+        user-select: none;
+		vertical-align: middle;
+		margin-right: 10px;
+	}
+	.posting .bottom div span:hover{
+		color: var(--background-color);
+	}
+	.posting .bottom div i{
+		font-size: 20px;
+		vertical-align: middle;
+		margin-right: 5px;
+	}
+	.posting .bottom div .btn{
+		padding: 3px 30px;
+	}
+	.posting #up-read img{
+		display: inline-block;
+		width: 70px;
+		height: 70px;
+		margin-bottom: 10px;
+		margin-right: 10px;
+		border-radius: 3px;
+	}
+	.tag{
+		background: red;
+		display: none;
+		border-radius: 50%;
+		width: 15px;
+		height: 15px;
+		color: #fff;
+		text-align: center;
+		font-size: 11px;
+		font-weight: 700;
+		position: absolute !important;
+		top: -8px;
+		right: -8px;
+		z-index: 1;
+		line-height: 17px;
+	}
+</style>
+<style type="text/css">
+	.imgView{
+		display:none;
+		background:#fff;
+		border-radius:5px;
+	}
+	.imgController{
+		padding: 5px;
+	}
+	.imgController span{
+		margin-right:10px; font-size:12px;
+		cursor: pointer;
+	}
+	.imgController span:hover{
+		color: var(--background-color);
+	}
+	.imgController span i{
+		font-size:12px;margin-right:5px;
+	}
+	.imgViewSrc{
+		padding: 0 15px 15px 15px;
+		text-align: center;
+	}
+	.imgViewSrc img{
+		width: auto;
+		height: auto;
+		max-width: 100%;
+	}
+}
+</style>
+<div class="container">
+	<div>
+		<div class="col-ms-8 col-xs-8 col-sm-8 forum-list clearpad">
+				<form method="post" action="{:url('index/forum/insert')}" enctype="multipart/form-data">
+						<input type="hidden" value="{$Think.session.user_id}" name="user_id">
+						<div class="posting box">
+							<div class="title">
+								<img src="/static/images/input-logo.png" />
+							</div>
+							<div class="p-input">
+								<textarea id="p-textarea" name="content"></textarea>
+							</div>
+							<div id="up-read">
+							</div>
+							<div class="bottom">
+								<div id="bq">
+									<i style="color: #FF9000;" class="iconfont iconsmile"></i><span>表情</span>
+									<div class="bqb box">
+										{volist name="bqb" id="item"}
+											<img data-code="{$item.code}" src="/static/images/bqb/{$item.code}.png">
+										{/volist}
+									</div>
+								</div>
+								<div id="imgUp"><i style="color: #77CE2B;" class="iconfont iconpicture-filling"></i>
+									<span style="position: relative;">
+										图片
+									</span>
+								</div>
+								<div id="videoUp">
+									<i style="color: #40A7F2;" class="iconfont iconfilm"></i>
+									<span style="position: relative;">
+										视频
+										<text class="tag">1</text>
+									</span>
+								</div>
+								<input  
+										id='videoipt' 
+									 	style="display: none;" 
+									 	class='videoipt' 
+									 	type='file' 
+									 	name='video' 
+									 	accept='application/ogg, audio/ogg' 
+									 	multiple />
+								<div id="ht"><i style="color: #5A8CE6;" class="iconfont iconlayers"></i><span>话题</span></div>
+								<div style="float: right;"><button style="background: var(--background-color); color: #fff" class="btn" type="submit">发表</button></div>
+							</div>
+						</div>
+					</form>
+					{volist name="forum" id="item"}
+						<div class="list-item box">
+							<div class="avatar-box">
+								<img src="{$item.avatar}">
+							</div>
+							<div class="right">
+								<div class="title">{$item.name}</div>
+								<div class="content">{$item.content|raw} ​</div>
+								{if $item.type == 2}
+									{if sizeof($item.url)>1}
+										<div class="imgs">
+											{volist name="item.url" id="urlItem"}
+											<img onclick="imgView(this)" src="{$urlItem}" />
+											{/volist}
+										</div>
+									{else /}
+										<div class="img">
+											<img onclick="imgView(this)" class="viewImg" src="{$item.url[0]}">
+										</div>
+									{/if}
+								{elseif $item.type == 3/}
+								<video style="background-color: #000;" width="80%" height="280" src="{$item.url}" controls="controls"></video>
+								{/if}
+								<div style="margin-right: 10px;" id="imgViewBox"></div>
+								<div class="time">{$item.create_time|date_desc}</div>
+								<div class="item-bottom">
+									<div>收藏</div>
+									<div>转发</div>
+									<div>评论</div>
+									<div style="border-right:none">点赞</div>
+								</div>
+							</div>
+						</div>
+					{/volist}
+		</div>
+		<div class="col-ms-4 col-xs-4 col-sm-4">
+			<div class="hot box">
+				<div class="title">热门</div>
+				<div class="list">
+					<div class="item">
+						<div class="top">1</div>
+						<div class="content">傅园慧预赛第一无缘决赛</div>
+						<div class="count">281万</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(function(){
+		$('#bq').click(function(e){
+			$('.bqb').show(200);
+			$(document).one('click',function(){
+                $('.bqb').hide();
+            })
+            e.stopPropagation();/*stopPropagation();方法可以阻止把事件分派到其他节点*/
+		})
+		$('.bqb').children().click(function(e){
+			$('#p-textarea').val($('#p-textarea').val() + '['+e.target.dataset.code+']');
+		})
+		$("#imgUp").on("click", function(e) {
+			   var count = $('.imgipt').length;
+			   var newFile = `<input id='imgipt'class='imgipt' style="display:none;" type='file' name='img${count}' accept='image/*' multiple />`;
+			   if($('#videoUp .tag').is(":hidden")){
+			       $(this).parent().append($(newFile));
+			       $("#imgipt").bind("change", function(e){
+			            // onFileUploaded(e);预览等操作
+			            var imgs = document.getElementById('imgipt').files[0];
+						var src = getObjectURL(imgs);
+						$('#up-read').append(`<img src=${src} />`);
+			            $(this).removeAttr("id");
+			       });
+			       $("#imgipt").click();
+			   }else{
+			   	    if(confirm('是否放弃上传的视频?(图片和视频只能选一个发送哦!)')){
+						var file = document.getElementById('videoipt');
+						file.outerHTML = file.outerHTML;
+						$('#videoUp .tag').hide();
+						$("#imgUp").click();
+			   		}
+			   }
+			   
+		});
+		$("#videoUp").on("click", function(e) {
+			var count = $('#up-read img').length;
+			if(count>0){
+				if(confirm('是否放弃上传的图片?(图片和视频只能选一个发送哦!)')){
+					$('#up-read').children().filter("img").remove();
+					$('.posting .bottom .imgipt').remove();
+					$("#videoipt").click();
+				}
+			}else{
+				$("#videoipt").click();
+			}
+			
+		});
+		$("#videoipt").bind("change", function(e){
+			$('#videoUp .tag').show(500);
+		});
+		$("#ht").click(function(){
+			alert('人手不够懒得开发~~~');
+		})
+	})
+	function getObjectURL(file) {
+             var url = null ;
+             if (window.createObjectURL!=undefined) { // basic
+                 url = window.createObjectURL(file) ;
+             } else if (window.URL!=undefined) { // mozilla(firefox)
+                 url = window.URL.createObjectURL(file) ;
+             } else if (window.webkitURL!=undefined) { // webkit or chrome
+                 url = window.webkitURL.createObjectURL(file) ;
+             }
+             return url ;
+    }
+</script>
+<script type="text/javascript">
+	function imgView(e){
+		var that = $(e).parents('.right').children('#imgViewBox');
+		var src = e.src;
+		if($(that).children().length>0){
+			var imgv = $(that).children()[0];
+			var imgs = $(imgv).children('.imgViewSrc').children();
+			if(imgs[0].src == src){
+				imgViewRemove(e);
+			}else{
+				imgs[0].src = src;
+			}
+		}else{
+			var Box ='<div class="imgView">'+
+						'<div class="imgController">'+
+							'<span onclick="imgViewRemove(this)"><i class="iconfont icontop"></i>收起</span>'+
+							'<span onclick="imgViewBig(this)"><i class="iconfont iconfullscreen-expand"></i>查看大图</span>'+
+						'</div>'+
+						'<div class="imgViewSrc">'+
+							`<img src="${src}">`+
+						'</div>'+
+					'</div>'
+			$(that).append(Box);
+			$(that).children('.imgView').show(200);
+		}
+	}
+	function imgViewBig(e){
+		var that = $(e).parents('.right').children('#imgViewBox');
+		var imgv = $(that).children()[0];
+		var imgs = $(imgv).children('.imgViewSrc').children();
+		window.open(imgs[0].src);
+	}
+	function imgViewRemove(e){
+		var that = $(e).parents('.right').children('#imgViewBox');
+		$(that).children('.imgView').hide(200);
+		setTimeout(function(){
+			$(that).empty()
+		},200)
+	}
+</script>
+{/block}	

@@ -1,0 +1,213 @@
+
+<style type="text/css">
+  .navbar{
+    margin-bottom: 0 !important;
+    border-radius: 0 !important;
+    /*position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin-bottom: 50px;*/
+  }
+    .navbarBg{
+        background: none !important;
+    }
+      .navbar li a{
+        color: #fff !important;
+        font-weight: 700;
+      }
+      .nav li a:hover{
+        background: rgba(255,255,255,0.3) !important;
+      }
+      .nav li a:active{
+        background: rgba(255,255,255,0.3) !important;
+      }
+      .nav li a:visited{
+        background: rgba(255,255,255,0.3) !important;
+      }
+      .nav .active{
+        background: rgba(255,255,255,0.3) !important;
+      }
+      .nav .open a:focus{
+        background: rgba(255,255,255,0.3) !important;
+      }
+      .nav .open a:active{
+        background: rgba(255,255,255,0.3) !important;
+      }
+      .dropdown-menu{
+        background: rgba(255,255,255,0.3) !important;
+      }
+      .avatar{
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+      }
+      .avatar-pd{
+        padding: 12px !important;
+      }
+      .weather{
+        font-size: 20px;
+        padding-top: 2px;
+      }
+      .weathera{
+        max-height: 50px;
+      }
+      .weatherInfo{
+        width:200px;
+        position: absolute;
+        top: 60px;
+        right: -60px;
+        z-index:9999;
+        background: none !important;
+        color: #fff;
+        padding: 12px;
+        border-radius: 10px;
+        display: none;
+        box-shadow: 0 0 5px #fff;
+      }
+      .btn-primary{
+        border: none;
+        background-color: #20a53a !important;
+      }
+      .btn-danger{
+        background: #DD001B !important;
+        border:none !important;
+      }
+</style>
+<nav class="navbar navbarBg">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <a id="Emoticons" style="color:#fff;" onClick="msg();" class="navbar-brand" href="#">ʕ•ﻌ•ʔ ​​​нёιιö​​​</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li
+          {eq name="$Request.controller" value="Index"}
+                    class="active" 
+          {/eq}
+        ><a href="{:url('index/index/index')}">主页<span class="sr-only">(current)</span></a></li>
+
+        <li
+          {eq name="$Request.controller" value="Chatroom"}
+                    class="active" 
+          {/eq}
+        ><a href="{:url('index/chatroom/index')}">聊天室</a></li>
+        <li
+          {eq name="$Request.controller" value="Notepad"}
+                    class="active" 
+          {/eq}
+        ><a href="{:url('index/notepad/index')}">豆泥笔记</a></li>
+
+        <li
+          {eq name="$Request.controller" value="Video"}
+                    class="active" 
+          {/eq}
+        ><a href="{:url('index/video/index')}">豆泥视频</a></li>
+
+        <li
+          {eq name="$Request.controller" value="Forum"}
+                    class="active" 
+          {/eq}
+        ><a href="{:url('index/forum/index')}">豆泥论坛</a></li>
+
+        <li
+          {eq name="$Request.controller" value="Music"}
+                    class="active" 
+          {/eq}
+        ><a href="{:url('index/music/index')}">豆泥音乐</a></li>
+
+     <!--    <li
+          {eq name="$Request.controller" value="Forum"}
+                    class="active" 
+          {/eq}
+        ><a href="{:url('index/forum/index')}">豆泥小说</a></li> -->
+
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a class="weathera" href="#">
+          <span class="weather glyphicon glyphicon-cloud" aria-hidden="true"></span></a>
+          <div id="weatherInfo" class="weatherInfo"></div>
+        </li>
+        {if $Think.session.user_id}
+           <li class="dropdown">
+            <a href="#" class="dropdown-toggle avatar-pd" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <img 
+                  style="margin-right: 5px;" 
+                  class="avatar" 
+                  src="{$Think.session.user_avatar|default='/uploads/avatar/default-avatar.png'}">
+              {$Think.session.user_name}<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="{:url('index/user/personal',['type'=> 1])}">个人中心</a></li>
+              <li><a href="{:url('index/user/unLogin')}">退出登录</a></li>
+            </ul>
+          </li>
+        {else /}
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle weathera" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span style="font-size: 16px;" class="glyphicon glyphicon-user" aria-hidden="true"></span><span class="caret"></span></a>
+            <ul class="dropdown-menu">
+               <li><a href="{:url('index/user/login')}">登录</a></li>
+              <li><a href="{:url('index/user/register')}">注册</a></li>
+            </ul>
+          </li>
+        {/if}
+      </ul>
+    </div>
+  </div>
+</nav>
+<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+<script type="text/javascript">
+   $(function(){
+    var a = returnCitySN.cname.indexOf("市");
+    var b = returnCitySN.cname.indexOf("省");
+    if(a < 0 || b < 0){
+      var city = returnCitySN.cname;
+    }else{
+      var city = returnCitySN.cname.substring(a,b+1);
+    }
+    $.ajax({
+        type:'get',
+        url:`http://wthrcdn.etouch.cn/weather_mini?city=${city}`,
+        dataType:'json',
+        success:function(e){
+          console.log(e)
+          $('#weatherInfo').html(
+            `
+            <p>
+              <span style="
+                position:absolute;
+                right:13px;
+                top:13px;
+                font-size:20px;" 
+                class="glyphicon glyphicon-cloud" >
+              </span>
+              当前温度:${e.data.wendu}°C
+            </p>
+            <p>${e.data.city}今天${e.data.forecast[0].type}</p>
+            <p>温馨提示：${e.data.ganmao}</p>
+            `
+          )
+        }
+      })
+      $('.weather').parent().hover(function(){
+        $('#weatherInfo').show(100);
+      },function(){
+        $('#weatherInfo').hide(100);
+      });
+
+      $('#Emoticons').hover(function(){
+        $('#Emoticons').html("ᶘ ᵒᴥᵒᶅ<span style='font-size:13px;font-weight:700;margin-left:11.5px;'>????<span>");
+      },function(){
+        $('#Emoticons').html('ʕ•ﻌ•ʔ ​​​нёιιö​​​');
+      });
+      
+    })
+  function msg(){
+    alert('Hong : 欢迎来到我的世界  (๑ºั ³ ˘๑)♥');
+  }
+  function getWeather(){
+    
+  }
+</script>

@@ -1,0 +1,37 @@
+{extend name="public/body"}
+{block name="body"}
+<style type="text/css">
+	body { background: #f5f6f7; }
+	.svg-size .icon{
+		width: 70px;
+		height: 70px;
+		margin-right: 10px;
+	}
+</style>
+	{include file="user/personal-header"/}	
+	<div style="margin-top: 15px;" class="container">
+		{include file="user/personal-menu"/}
+		<div class="resetpad col-ms-10 col-xs-10 col-sm-10">
+			<div style="padding: 15px;" class="box-bg">
+				<h4>已获得</h4>
+				<hr>
+				<div class="has svg-size">
+					{volist name="hasMedal" id="item"}
+						<svg class="icon iconfont">
+							<use xlink:href="#{$item.code}" />
+						</svg>
+					{/volist}
+				</div>
+				<h4 style="margin-top:50px;">未获得</h4>
+				<hr>
+				<div class="empty svg-size">
+					{volist name="emptyMedal" id="item"}
+						<svg class="icon iconfont">
+							<use xlink:href="#{$item.code}" />
+						</svg>
+					{/volist}
+				</div>
+			</div>
+		</div>	
+	</div>	
+{/block}

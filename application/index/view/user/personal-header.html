@@ -1,0 +1,53 @@
+<style type="text/css">
+	.box-bg{
+		background-color: #fff;
+	}
+	.my-header{
+		background: url("/static/images/my-banner.png") no-repeat;
+		height: 150px;
+	}
+	.my-header .container{
+		display: flex;
+	}
+	.my-header .container .avatar{
+		padding-top: 20px;
+		width: 110px;
+	}
+	.my-header .container .avatar img{
+		width: 90px;
+		height: 90px;
+		border-radius: 50%;
+	}
+	.my-header .container .user{
+		font-size: 22px;
+		color: #fff;
+		margin-top: 40px;
+	}
+
+	.my-header .container .user .iconfont{
+		width: 20px;
+		vertical-align: middle;
+		height: 20px;
+	}
+	.gxqm{
+		font-size: 12px;
+		padding-left: 25px;
+		padding-top: 5px;
+	}
+</style>
+<div class="my-header">
+	<div class="container">
+		<div class="avatar">
+				<img src="{$userinfo.avatar|default='/uploads/avatar/default-avatar.png'}">
+		</div>
+		<div class="user">
+			<svg class="icon iconfont"  aria-hidden="true">
+					<use xlink:href="#iconxunzhang" />
+			</svg>
+			<span>{$userinfo.name|default="空"}</span>
+			<div class="gxqm">
+				{$userinfo.sign|default="这个人很懒什么都没有留下"}
+			</div>
+		</div>
+	</div>
+</div>

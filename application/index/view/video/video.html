@@ -1,0 +1,116 @@
+{extend name="public/body"}
+{block name="body"}
+	<style type="text/css">
+		body{
+			background: url('/static/images/chatroom-back.jpg') no-repeat;
+			background-size: 100% 100vh;
+			min-height: 100vh;
+		}
+		.container{
+			text-align: center;
+			background: #fff;
+		}
+		.a-input{
+			padding: 10px;
+			width: 100%;
+			border: 1px solid rgba(255,255,255,0);
+			border-radius: 3px;
+			margin: 10px 0;
+			background: rgba(255,255,255,0.2);
+		}
+		.a-input::-webkit-input-placeholder{
+			color: #fff;
+		}
+		.video{
+			width: 100%;
+			height: 550px;
+			border: none;
+		}
+		.left-box{
+			padding: 10px;
+		}
+		.right-box{
+			padding-top: 62px;
+		}
+		.cinema{
+			background: var(--background-color);
+			color: #fff;
+			display: inline-block;
+			padding: 5px 10px;
+			border-radius: 4px;
+			box-shadow: 0 0 5px var(--background-color);
+			cursor:pointer;
+		}
+		.cinema:hover{
+			background: var(--background-color-hover);
+			transition: .5s;
+		}
+	</style>
+	<div class="left-box col-md-2 col-xs-2 col-sm-2">
+	</div>
+	<div class="col-md-8 col-xs-8 col-sm-8">
+		<input id="search_input" class="a-input" type="text" class="form-control" id="" placeholder-style="color:#fff;" placeholder="请粘贴需要解析的视频地址 , 回车确认">
+		<iframe id="video" class="video" src="https://v.qq.com/"></iframe>
+		
+	</div>
+	<div class="right-box col-md-2 col-xs-2 col-sm-2">
+		<div class="cinema" id="gd">
+			<span class="glyphicon glyphicon-blackboard"></span>
+			影院模式
+		</div>
+	</div>
+	<!-- https://vip.52jiexi.top/?url= -->
+	<script type="text/javascript">
+		$('#search_input').bind('keyup', function(event) {
+		　　if (event.keyCode == "13") {
+				var data = $('#search_input').val();
+				var url = "https://www.ckmov.vip/api.php?url="+data;
+				setIframe(url);
+		　　}
+		});
+		function setIframe(url){
+			console.log(url);
+			document.getElementById("video").src = url;
+		}
+		$('#full_screen').click(function(){
+			var data = $('#search_input').val();
+			var url = "https://vip.52jiexi.top/?url="+data;
+			window.open(url,"_blank");
+		})
+
+		$('#gd').click(function(){
+			if($.trim($('#gd').text()) == "影院模式"){
+				$('body').css('background','#282923');
+				$('.navbar').hide();
+				$('#search_input').css({
+					'position':'fixed',
+					"right":120,
+					"top":0,
+					"width":300,
+					"background":'#282923',
+					"height":"30px",
+					"color":"#ccc"
+				});
+				$('#video').width($(document).width())
+						   .height($(document).height()-50)
+						   .css({
+								'position':'fixed',
+								"left":0,
+								"top":50
+							});
+				$('#gd').css({
+					'position':'fixed',
+					"right":15,
+					"top":10,
+					"color":'#000',
+					"background":'#ccc',
+					"box-shadow":'none'
+				}).html('点我开灯！');
+			}else{
+				window.location.reload();
+			} 
+			
+			
+		})
+	</script>
+{/block}

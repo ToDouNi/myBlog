@@ -1,0 +1,14 @@
+{extend name="public/body"}
+{block name="body"}
+	{volist name="list" id="item"}
+		<div><a data-url="{$item.url}" href="javascript:;">{$item.title}</a></div>
+	{/volist}
+	<script type="text/javascript">
+		$(function(){
+			$('a').click(function(e){
+				console.log(e.target.dataset.url);
+			})
+		})
+		
+	</script>
+{/block}

@@ -1,0 +1,71 @@
+{extend name="public/body"}
+{block name="body"}
+	<style type="text/css">
+		.ph{
+			font-size: 34px;
+		    font-weight: 700;
+		    line-height: 48px;
+		    color: #222;
+		}
+		.xg1{
+			color: #999 !important;
+			font-size: 12px;
+		}
+		.pipe{
+			margin: 0 5px;
+			color: #ccc;
+		}
+		.quotation{
+			position: relative;
+		    height: 48px;
+		    margin-top: 30px;
+		    margin-bottom: 30px;
+		}
+		.quotation span{
+			position: absolute;
+		    width: 27px;
+		    height: 27px;
+		}
+		.quotation p{
+			margin: 0 45px;
+		    line-height: 22px;
+		    font-size: 14px;
+		    color: #666;
+		    padding-top: 6px;
+		}
+		.quotation-right{
+			right: 0;
+		    background: url('http://www.todayhot.com.cn/template/xlmm_zx/portal/list/quotation.png') no-repeat;
+		    background-position: 0 -28px;
+		    margin-top: 40px;
+		}
+		.quotation-left{
+			top: 0;
+		    left: 0;
+		    background: url('http://www.todayhot.com.cn/template/xlmm_zx/portal/list/quotation.png') no-repeat;
+		}
+	</style>
+	<div class="col-ms-2 col-xs-2 col-sm-2"></div>
+	<div class="col-ms-8 col-xs-8 col-sm-8">
+				<h1 class="ph">{$title}</h1>
+				<p class="xg1">
+					{$date}
+					<span class="pipe">|</span>
+					发布者：{$author}
+				</p>
+				{if $zy}
+				<div class="quotation">
+					<span class="quotation-right"></span>
+					<p class="ellipsis">
+						{$zy}
+					</p>
+					<span class="quotation-left"></span>
+				</div>
+				{/if}
+			{$content|raw}
+	</div>
+	<div class="col-ms-2 col-xs-2 col-sm-2"></div>
+	<script type="text/javascript">
+
+	</script>
+{/block}

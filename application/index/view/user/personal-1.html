@@ -1,0 +1,367 @@
+{extend name="public/body"}
+{block name="body"}
+{load href="/static/js/cropbox-min.js"}
+<style type="text/css">
+	/*图片裁剪*/
+	.upimg-zz{
+		width: 100%;
+		height: 100%;
+		position: fixed;
+		top: 0;
+		z-index: 999;
+		background: rgba(0,0,0,0.5);
+		display: none;
+	}
+	.upimg-box{
+		width: 640px;
+		background: #fff;
+		margin: 0 auto;
+		margin-top: 20vh;
+		border-radius: 5px;
+		box-shadow: 0 1px 3px 0 rgba(0,0,0,.23);
+	}
+	.upimg-box .title{
+		border-radius: 5px 5px 0 0;
+		padding: 10px 10px;
+		background: var(--background-color);
+		line-height: 14px;
+		color: #fff;
+	}
+	.upimg-box .title span{
+		font-size: 14px;
+		font-weight: 700;
+	}
+	.upimg-box .title .iconfont{
+		float: right;
+		vertical-align: top;
+	}
+	.upimg-box .bottom{
+		padding: 15px;
+		text-align: right;
+	}
+	.imageBox
+	{
+	    position: relative;
+	    display: inline-block;
+	    height: 300px;
+	    width: 300px;
+	    border:1px dashed #999;
+	    background: #fff;
+	    overflow: hidden;
+	    background-repeat: no-repeat;
+	    cursor:move;
+	}
+
+	.imageBox .thumbBox
+	{
+	    position: absolute;
+	    top: 50%;
+	    left: 50%;
+	    width: 200px;
+	    height: 200px;
+	    margin-top: -100px;
+	    margin-left: -100px;
+	    box-sizing: border-box;
+	    border: 1px solid rgb(102, 102, 102);
+	    box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5);
+	    background: none repeat scroll 0% 0% transparent;
+	}
+	.cropped{
+		text-align: center;
+		margin-bottom: 10px;
+	}
+	.cropped img{
+		width: 150px;
+		border: 1px dashed #f1f1f1;
+		height: 150px;
+		border-radius: 50%;
+	}
+
+	.imageBox .spinner
+	{
+	    position: absolute;
+	    top: 0;
+	    left: 0;
+	    bottom: 0;
+	    right: 0;
+	    text-align: center;
+	    line-height: 400px;
+	    background: #eee;
+	}
+	.crop-box{
+		padding: 15px;
+	}
+	.crop-box .right{
+		padding-top: 50px;
+		vertical-align: top;
+		display: inline-block;
+		width: 300px;
+		text-align: center;
+	}
+</style>
+<style type="text/css">
+	
+	body { background: #f5f6f7; }
+	.my-data-right{
+		display: inline-block;
+		width: 38%;
+		vertical-align: top;
+		padding-left: 2%;
+	}
+	.my-data-right .avatar img{
+		width: 80px;
+		height: 80px;
+		border-radius: 50%;
+		cursor: pointer;
+	}
+	.my-data-right .avatar{
+		text-align: center;
+		margin: 0 auto;
+		width: 80px;
+		height: 80px;
+		margin-bottom: 25px;
+		position: relative;
+		overflow: hidden;
+	}
+	.my-data-right .avatar p{
+		color: #fff;
+		font-size: 12px;
+		text-align: center;
+		position: absolute;
+		bottom: -10px;
+		width: 100%;
+		height: 24px;
+		line-height: 24px;
+		display: none;
+		background: rgba(0,0,0,.8);
+		cursor: pointer;
+	}
+	.my-xz{
+		display: flex;
+		margin-bottom: 20px;
+		align-items: center;
+	}
+	.my-xz .desc{
+		min-width: 35px;
+		font-size: 14px;
+		font-weight: 700;
+		margin-right: 20px;
+	}
+	.my-xz .xz-list .icon{
+		width: 32px;
+		height: 32px;
+		margin-right: 5px;
+	}
+	.my-xz .bq-list .bq-item{
+		background: var(--background-color);
+		border-radius: 5px;
+		color: #fff;
+		font-size: 11px;
+		padding: 4px 6px;
+	}
+	
+
+
+</style>
+	{include file="user/personal-header"/}	
+
+	<div id="upimg" class="upimg-zz">
+		<div class="upimg-box">
+			<div class="title">
+				<span>上传头像</span>
+				<i onclick="upimgHide();" class="iconfont iconclose-bold"></i>
+			</div>
+			<div class="crop-box">
+				<div id="mup" class="imageBox">
+				    <div class="thumbBox"></div>
+				    <div class="spinner" style="display: none">Loading...</div>
+				</div>
+				<div class="right">
+					<div class="cropped">
+					</div>
+					<span>效果浏览</span>
+					<div class="action">
+					    <input style="display:none;" type="file" id="file" style="">
+					    <button style="background: var(--background-color);border: none;margin-top: 15px;" id="upbtn" class="btn btn-primary">
+							选择文件
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="bottom">
+				<button id="uploadImg" style="background: var(--background-color);border: none;" class="btn btn-primary">
+					确定并保存
+				</button>
+			</div>
+		</div>
+	</div>
+	
+	<div style="margin-top: 15px;" class="container">
+		{include file="user/personal-menu"/}
+		<div class="resetpad col-ms-10 col-xs-10 col-sm-10">
+			<div style="padding: 15px;" class="box-bg">
+				<form 
+					id="userform" 
+					action= "{:url('index/user/userSave')}" 
+					method= "post"
+					enctype="multipart/from-data" 
+					style="width: 60%;display: inline-block; padding-right: 2%; border-right: 1px solid #eee;" 
+					class="form-horizontal"
+				>
+				  <div class="form-group">
+				  </div>	
+				  <div class="form-group">
+				  	<input type="hidden" value="{$userinfo.id}" name="id">
+				    <label class="col-sm-2 control-label">ID：</label>
+				    <div class="col-sm-10">
+				     	<div style="height: 34px;line-height: 34px;">{$userinfo.id}</div>
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label class="col-sm-2 control-label">昵称：</label>
+				    <div class="col-sm-10">
+				      <input type="text" value="{$userinfo.name}" name="name" class="form-control" id="name" >
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label class="col-sm-2 control-label">邮箱：</label>
+				    <div class="col-sm-10">
+				      <input type="email" value="{$userinfo.email}" name="email" class="form-control" id="email" >
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label class="col-sm-2 control-label">签名：</label>
+				    <div class="col-sm-10">
+				      <textarea style="resize: none;" class="form-control" name="sign" rows="3">{$userinfo.sign}</textarea>
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label class="col-sm-2 control-label">手机：</label>
+				    <div class="col-sm-10">
+				      <div style="height: 34px;line-height: 34px;">{$userinfo.mobile}</div>
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label class="col-sm-2 control-label">时间：</label>
+				    <div class="col-sm-10">
+				      <div style="height: 34px;line-height: 34px;">{$userinfo.create_time} 创建</div>
+				    </div>
+				  </div>
+				  <label class="col-sm-2 control-label"></label>
+				  <div style="padding-left: 5px;" class="col-sm-10">
+					  <button type="submit" style="background: var(--background-color);border: none; color: #fff;" class="btn primary">保存信息</button>
+				  </div>
+				</form>
+				<div class="my-data-right">
+					<div id="avatar" class="avatar">
+						{if $userinfo.avatar}
+							<img src="{$userinfo.avatar}">
+						{else /}
+							<img src="/uploads/avatar/default-avatar.png">
+						{/if}
+						<p>上传头像</p>
+					</div>
+					<div class="my-xz">
+						<div class="desc">勋章:</div>
+						<div class="xz-list">
+							{volist name="medal" id="item"}
+							<svg class="icon iconfont"  aria-hidden="true">
+								<use xlink:href="#{$item.code}" />
+							</svg>
+							{/volist}
+						</div>
+					</div>
+					<div class="my-xz">
+						<div class="desc">技能:</div>
+						<div class="xz-list">
+							{volist name="skill" id="item"}
+							<svg class="icon iconfont"  aria-hidden="true">
+								<use xlink:href="#{$item.code}" />
+							</svg>
+							{/volist}
+
+						</div>
+					</div>
+
+					<div class="my-xz">
+						<div class="desc">标签:</div>
+						<div class="bq-list">
+							{volist name="label" id="item"}
+							<span style="background:{$item.color}" class="bq-item">{$item.text}</span>
+							{/volist}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>	
+	</div>	
+	<script type="text/javascript">
+		function upimgHide(){
+				$('#upimg').hide(300);
+		}
+		$(function(){
+			var options ={
+	            imageBox: '.imageBox',
+	            thumbBox: '.thumbBox',
+	            spinner: '.spinner',
+	            imgSrc: '{$userinfo.avatar}'
+	        }
+	        var cropper = new cropbox(options);
+	        function refreshImg(){
+				var img = cropper.getDataURL();
+	        	document.querySelector('.cropped').innerHTML = '<img id="imgsrc" src="'+img+'">';
+			}
+	        document.querySelector('#file').addEventListener('change', function(){
+	            var reader = new FileReader();
+	            reader.onload = function(e) {
+	            	console.log(e);
+	                options.imgSrc = e.target.result;
+	                cropper = new cropbox(options);
+	            }
+	            reader.readAsDataURL(this.files[0]);
+	            this.files = [];
+	        });
+	        $("#mup").mouseup(function(){
+	        	refreshImg();
+			});
+			$('#avatar').on({
+			  click:function(){
+			  	$('#upimg').show(300);
+			  	refreshImg();
+			  },
+	          mouseover : function(){
+	          	console.log(123);
+	          	 $(this).children("p").show();
+	          },
+	          mouseout : function(){
+	          	 $(this).children("p").hide();
+	          } 
+	        });
+	        $('#upbtn').click(function(){
+		        $('#file').click();
+		    });
+	         $("#uploadImg").click(function(){
+	        	var src = $("#imgsrc").attr('src');
+	        	$.ajax({
+	        		type:'post',
+	        		url:"{:url('index/user/uploadAvatar')}",
+	        		data:{
+	        			src,
+	        			user_id:'{$Think.session.user_id}'
+	        		},
+	        		dataType:"json",
+	        		success:function(res){
+	        			if(res.code == 1){
+	        				alert(res.msg);
+	        				window.location.reload();
+	        			}else{
+	        				alert(res.msg);
+	        			}
+	        		}
+	        	})
+	        });
+
+
+		})
+	</script>
+{/block}
